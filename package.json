@@ -1,0 +1,42 @@
+{
+  "name": "hacka-news",
+  "version": "1.0.0",
+  "description": "Hacker News command line reader.",
+  "main": "src/hacka-news.js",
+  "preferGlobal": "true",
+  "bin" : {
+    "hacka-news" : "./bin/index.js"
+  },
+  "dependencies": {
+    "colors": "^1.1.2",
+    "commander": "^2.9.0",
+    "request": "^2.60.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Coteh/hacka-news.git"
+  },
+  "keywords": [
+    "hacker",
+    "news",
+    "ycombinator",
+    "hacka",
+    "viewer",
+    "command",
+    "line",
+    "cli"
+  ],
+  "author": "James Cote",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Coteh/hacka-news/issues"
+  },
+  "homepage": "https://github.com/Coteh/hacka-news#readme",
+  "engines": {
+    "node" : ">=4.0.0"
+  }
+}
