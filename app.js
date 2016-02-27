@@ -2,12 +2,15 @@ var request = require('request');
 var hackaNews = require('./src/hacka-news');
 var cliProcessor = require('commander');
 
+var cmdGiven = null;
+
 cliProcessor
   .version('1.0.0')
   .arguments("<cmd> [arguments...]")
   .option("-l, --headlines", "headlines only")
   .option("-v, --verbose", "verbosity")
   .action(function(cmd, arguments, options){
+    cmdGiven = cmd;
     if (cmd == "favs"){
       hackaNews.openSavedPostsJSON();
       hackaNews.printFavourites(options);
@@ -167,3 +170,7 @@ cliProcessor
     console.log('');
   })
   .parse(process.argv);
+
+if (cmdGiven === null){
+    cliProcessor.outputHelp();
+}
