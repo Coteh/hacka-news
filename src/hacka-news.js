@@ -184,6 +184,10 @@ var getURL = function(id){
 }
 
 var printFavourites = function(flags){
+  if (savedIDS.length == 0){
+    cli_display.displayMessage(cli_display.NOFAVS_MESSAGE);
+    return;
+  }
   requestGroup(savedIDS, function(loadedContents){
     for (var i = 0; i < loadedContents.length; i++){
       if (loadedContents[i] == null){

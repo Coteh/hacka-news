@@ -1,5 +1,11 @@
 var colors = require('colors/safe');
 
+exports.NOFAVS_MESSAGE = "No favourites.";
+
+exports.displayMessage = function(message){
+  console.log(colors.yellow(message));
+}
+
 exports.displayContent = function(hnNode, flags){
   if (hnNode == null || hnNode.type == null){
     console.log("Null story.");
