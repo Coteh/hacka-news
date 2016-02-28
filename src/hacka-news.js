@@ -1,27 +1,41 @@
 var request = require('request');
 var fs = require('fs');
+var os = require('os');
 var cli_display = require('./cli-display')
 
 var HACKA_API_URL = "https://hacker-news.firebaseio.com/v0/";
 var HACKA_URL = "https://news.ycombinator.com/";
 var MAX_LIST_STORIES = 500; //The official HN API only stores up to 500 top/new stories
+var HNSAVED_FILENAME = ".hnsaved";
 
 var savedIDS = [];
 var amtOfFeedStories = 10;
 var jsonObject = null;
 
 var writeJSON = function(serialized, callback){
-  fs.writeFile("saved-posts.json", serialized, function(err) {
+  fs.writeFile(os.homedir() + "/" + HNSAVED_FILENAME, serialized, function(err) {
     if (err){
       console.log("ERROR: Could not save file.");
       return;
     }
-    callback(err);
+    if (callback != null){
+      callback(err);
+    }
   });
 }
 
 var openSavedPostsJSON = function(){
-  var data = fs.readFileSync("saved-posts.json", {encoding: 'utf-8'});
+  var data = null;
+  try{
+    data = fs.readFileSync(os.homedir() + "/" + HNSAVED_FILENAME, {encoding: 'utf-8'});
+  }catch(e){
+    if (e.code == 'ENOENT'){
+      console.log("ERROR: HN favourites file could not open. Creating new file...");
+      writeJSON("{}", null);
+      return;
+    }
+    return;
+  }
   jsonObject = JSON.parse(data);
   if (jsonObject.ids != null){
     setSavedPostIDS(jsonObject.ids);
