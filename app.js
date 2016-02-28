@@ -1,4 +1,3 @@
-var request = require('request');
 var hackaNews = require('./src/hacka-news');
 var cliProcessor = require('commander');
 
