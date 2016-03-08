@@ -4,7 +4,7 @@ var cliProcessor = require('commander');
 var cmdGiven = null;
 
 cliProcessor
-    .version('1.0.0')
+    .version('1.0.1')
     .arguments("<cmd> [arguments...]")
     .option("-l, --headlines", "headlines only")
     .option("-v, --verbose", "verbosity")
