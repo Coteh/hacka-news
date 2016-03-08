@@ -96,8 +96,10 @@ cliProcessor
             hackaNews.unsavePostID(parseInt(arguments[0]));
         }else if (cmd == "topid"){
             var indexOfStory = 0;
-            if (arguments.length > 1){
+            if (arguments.length >= 1){
                 indexOfStory = parseInt(arguments[0]);
+            }else{
+                indexOfStory = 0;
             }
             try{
                 hackaNews.fetchTopID(indexOfStory, function(id){
@@ -112,8 +114,10 @@ cliProcessor
             }
         }else if (cmd == "topurl"){
             var indexOfStory = 0;
-            if (arguments.length > 1){
+            if (arguments.length >= 1){
                 indexOfStory = parseInt(arguments[0]);
+            }else{
+                indexOfStory = 0;
             }
             try{
                 hackaNews.fetchTopURL(indexOfStory, function(url){

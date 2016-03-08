@@ -230,7 +230,7 @@ var fetchTopID = function(index, callback) {
     if (index < 0 || index >= MAX_LIST_STORIES){
         throw -1;
     }
-    requestTopStoryIDs(function(ids){
+    requestFeedStoryIDs("top", function(ids){
         if (ids == null){
             console.log("ERROR: Top stories did not load.");
             return;
