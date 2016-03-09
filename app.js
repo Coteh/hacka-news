@@ -8,7 +8,7 @@ var cmdGiven = null;
 hackaNews.setAPIURL(HACKA_API_URL);
 
 cliProcessor
-    .version('1.0.0')
+    .version('1.0.1')
     .arguments("<cmd> [arguments...]")
     .option("-l, --headlines", "headlines only")
     .option("-v, --verbose", "verbosity")
@@ -100,8 +100,10 @@ cliProcessor
             hackaNews.unsavePostID(parseInt(arguments[0]));
         }else if (cmd == "topid"){
             var indexOfStory = 0;
-            if (arguments.length > 1){
+            if (arguments.length >= 1){
                 indexOfStory = parseInt(arguments[0]);
+            }else{
+                indexOfStory = 0;
             }
             try{
                 hackaNews.fetchTopID(indexOfStory, function(id){
@@ -116,8 +118,10 @@ cliProcessor
             }
         }else if (cmd == "topurl"){
             var indexOfStory = 0;
-            if (arguments.length > 1){
+            if (arguments.length >= 1){
                 indexOfStory = parseInt(arguments[0]);
+            }else{
+                indexOfStory = 0;
             }
             try{
                 hackaNews.fetchTopURL(indexOfStory, function(url){
