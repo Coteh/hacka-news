@@ -14,7 +14,12 @@
   },
   "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
+  },
+  "jest": {
+      "unmockedModulePathPatterns": [
+          "<rootDir>/node_modules/colors"
+      ]
   },
   "repository": {
     "type": "git",

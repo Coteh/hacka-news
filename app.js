@@ -1,7 +1,11 @@
 var hackaNews = require('./src/hacka-news');
 var cliProcessor = require('commander');
 
+var HACKA_API_URL = "https://hacker-news.firebaseio.com/v0/";
+
 var cmdGiven = null;
+
+hackaNews.setAPIURL(HACKA_API_URL);
 
 cliProcessor
     .version('1.0.0')

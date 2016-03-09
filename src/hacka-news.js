@@ -3,14 +3,18 @@ var fs = require('fs');
 var os = require('os');
 var cli_display = require('./cli-display')
 
-var HACKA_API_URL = "https://hacker-news.firebaseio.com/v0/";
 var HACKA_URL = "https://news.ycombinator.com/";
 var MAX_LIST_STORIES = 500; //The official HN API only stores up to 500 top/new stories
 var HNSAVED_FILENAME = ".hnsaved";
 
+var hackaAPIURL = null;
 var savedIDS = [];
 var amtOfFeedStories = 10;
 var jsonObject = null;
+
+var setAPIURL = function(url){
+    hackaAPIURL = url;
+}
 
 var writeJSON = function(serialized, callback){
     fs.writeFile(os.homedir() + "/" + HNSAVED_FILENAME, serialized, function(err) {
@@ -82,7 +86,7 @@ var unsavePostID = function(postID){
 }
 
 var requestFeedStoryIDs = function(storyType, callback){
-    request(HACKA_API_URL + storyType + "stories.json?print=pretty", function(error, response, body) {
+    request(hackaAPIURL + storyType + "stories.json?print=pretty", function(error, response, body) {
         if (error){
             console.log("ERROR: Couldn't load " + storyType + " stories.");
             return;
@@ -93,7 +97,7 @@ var requestFeedStoryIDs = function(storyType, callback){
 }
 
 var requestStory = function(id, callback){
-    request(HACKA_API_URL + "item/" + id + ".json?print=pretty", function (error, response, body) {
+    request(hackaAPIURL + "item/" + id + ".json?print=pretty", function (error, response, body) {
         if (error){
             console.log("ERROR: Couldn't load story.");
             return;
@@ -246,11 +250,13 @@ var fetchTopURL = function(index, callback) {
 }
 
 module.exports = {
+    setAPIURL,
     openSavedPostsJSON,
     getSavedPostID,
     setSavedPostIDS,
     savePostID,
     unsavePostID,
+    requestFeedStoryIDs,
     getURL,
     printFavourites,
     printFeed,
