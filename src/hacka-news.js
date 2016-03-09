@@ -7,7 +7,7 @@ var HACKA_URL = "https://news.ycombinator.com/";
 var MAX_LIST_STORIES = 500; //The official HN API only stores up to 500 top/new stories
 var HNSAVED_FILENAME = ".hnsaved";
 
-var hackaAPIURL = null;
+var hackaAPIURL = "https://hacker-news.firebaseio.com/v0/";
 var savedIDS = [];
 var amtOfFeedStories = 10;
 var jsonObject = null;
