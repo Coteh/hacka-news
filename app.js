@@ -1,5 +1,50 @@
 var hackaNews = require('./src/hacka-news');
+var cliDisplay = require('./src/cli-display');
 var cliProcessor = require('commander');
+
+var printFavourites = function(flags){
+    if (savedIDS.length == 0){
+        cliDisplay.displayMessage(cliDisplay.NOFAVS_MESSAGE);
+        return;
+    }
+    hackaNews.requestGroup(savedIDS, function(loadedContents){
+        for (var i = 0; i < loadedContents.length; i++){
+            if (loadedContents[i] == null){
+                console.log("ERROR: Story couldn't load.");
+                continue;
+            }
+            cliDisplay.displayContent(loadedContents[i], flags);
+        }
+    });
+};
+
+var printFeed = function(storyType, flags){
+    hackaNews.requestFeedStoryIDs(storyType, function(ids){
+        if (ids == null){
+            console.log("ERROR: Stories from " + storyType + " could not load.");
+            return;
+        } else if (ids.error) {
+            console.log("ERROR: " + ids.error + ".");
+            return;
+        }
+        var prunedIDs = ids.slice(0, hackaNews.getAmountOfFeedStories());
+        hackaNews.requestGroup(prunedIDs, function(loadedContents){
+            for (var i = 0; i < loadedContents.length; i++){
+                if (loadedContents[i] == null){
+                    console.log("ERROR: Story couldn't load.");
+                    continue;
+                }
+                cliDisplay.displayContent(loadedContents[i], flags);
+            }
+        });
+    });
+};
+
+var printStory = function(id, flags){
+    hackaNews.requestStoryParsed(id, function(hnJson){
+        cliDisplay.displayContent(hnJson, flags);
+    });
+};
 
 var cmdGiven = null;
 
@@ -12,21 +57,21 @@ cliProcessor
         cmdGiven = cmd;
         if (cmd == "favs"){
             hackaNews.openSavedPostsJSON();
-            hackaNews.printFavourites(options);
+            printFavourites(options);
         }else if (cmd == "top"){
-            hackaNews.printFeed("top", options);
+            printFeed("top", options);
             return;
         }else if (cmd == "new"){
-            hackaNews.printFeed("new", options);
+            printFeed("new", options);
             return;
         }else if (cmd == "ask"){
-            hackaNews.printFeed("ask", options);
+            printFeed("ask", options);
             return;
         }else if (cmd == "show"){
-            hackaNews.printFeed("show", options);
+            printFeed("show", options);
             return;
         }else if (cmd == "jobs"){
-            hackaNews.printFeed("job", options);
+            printFeed("job", options);
             return;
         }else if (cmd == "url"){
             if (arguments.length < 1){
@@ -136,7 +181,7 @@ cliProcessor
             } else {
                 var storyID = parseInt(arguments[0]);
                 try {
-                    hackaNews.printStory(storyID, options);
+                    printStory(storyID, options);
                 }catch (e){
                     if (e == -1){
                         console.log("ERROR: Index entered is not a number.");
