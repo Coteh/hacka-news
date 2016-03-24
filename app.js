@@ -3,11 +3,12 @@ var cliDisplay = require('./src/cli-display');
 var cliProcessor = require('commander');
 
 var printFavourites = function(flags){
-    if (savedIDS.length == 0){
+    var savedIDs = hackaNews.getSavedIDs();
+    if (savedIDs.length == 0){
         cliDisplay.displayMessage(cliDisplay.NOFAVS_MESSAGE);
         return;
     }
-    hackaNews.requestGroup(savedIDS, function(loadedContents){
+    hackaNews.requestGroup(savedIDs, function(loadedContents){
         for (var i = 0; i < loadedContents.length; i++){
             if (loadedContents[i] == null){
                 console.log("ERROR: Story couldn't load.");

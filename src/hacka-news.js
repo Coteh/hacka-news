@@ -7,13 +7,17 @@ var MAX_LIST_STORIES = 500; //The official HN API only stores up to 500 top/new 
 var HNSAVED_FILENAME = ".hnsaved";
 
 var hackaAPIURL = "https://hacker-news.firebaseio.com/v0/";
-var savedIDS = [];
+var savedIDs = [];
 var amtOfFeedStories = 10;
 var jsonObject = null;
 
 var getAmountOfFeedStories = function(){
     return amtOfFeedStories;
 };
+
+var getSavedIDs = function(){
+    return savedIDs;
+}
 
 var getURL = function(id){
     return HACKA_URL + "item?id=" + id;
@@ -55,22 +59,22 @@ var openSavedPostsJSON = function(){
 var getSavedPostID = function(index){
     if (isNaN(index)){
         throw -1;
-    }else if (index >= savedIDS.length){
+    }else if (index >= savedIDs.length){
         throw -2;
     }
-    return savedIDS[index];
+    return savedIDs[index];
 };
 
 var setSavedPostIDS = function(savedList){
     for (var i = 0; i < savedList.length; i++){
-        savedIDS.push(savedList[i]);
+        savedIDs.push(savedList[i]);
     }
 };
 
 var savePostID = function(postID){
     openSavedPostsJSON();
-    savedIDS.push(postID);
-    jsonObject.ids = savedIDS;
+    savedIDs.push(postID);
+    jsonObject.ids = savedIDs;
     var jsonSerialized = JSON.stringify(jsonObject);
     writeJSON(jsonSerialized, function(err){
         console.log("Successfully added post of ID " + postID + " to favourites.");
@@ -79,13 +83,13 @@ var savePostID = function(postID){
 
 var unsavePostID = function(postID){
     openSavedPostsJSON();
-    var index = savedIDS.indexOf(postID);
+    var index = savedIDs.indexOf(postID);
     if (index <= -1){
         console.log("Could not find a post of this ID saved in your favourites.");
         return;
     }
-    savedIDS.splice(index, 1);
-    jsonObject.ids = savedIDS;
+    savedIDs.splice(index, 1);
+    jsonObject.ids = savedIDs;
     var jsonSerialized = JSON.stringify(jsonObject);
     writeJSON(jsonSerialized, function(err){
         console.log("Successfully removed post of ID " + postID + " from favourites.");
@@ -210,6 +214,7 @@ var fetchTopURL = function(index, callback) {
 
 module.exports = {
     getAmountOfFeedStories,
+    getSavedIDs,
     getURL,
     setAPIURL,
     openSavedPostsJSON,
