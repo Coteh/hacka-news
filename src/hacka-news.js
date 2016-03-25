@@ -1,13 +1,9 @@
 var request = require('request');
-var fs = require('fs');
-var os = require('os');
 
 var HACKA_URL = "https://news.ycombinator.com/";
 var MAX_LIST_STORIES = 500; //The official HN API only stores up to 500 top/new stories
-var HNSAVED_FILENAME = ".hnsaved";
 
 var hackaAPIURL = "https://hacker-news.firebaseio.com/v0/";
-var savedIDs = [];
 var amtOfFeedStories = 10;
 var jsonObject = null;
 
@@ -15,85 +11,12 @@ var getAmountOfFeedStories = function(){
     return amtOfFeedStories;
 };
 
-var getSavedIDs = function(){
-    return savedIDs;
-}
-
 var getURL = function(id){
     return HACKA_URL + "item?id=" + id;
 };
 
 var setAPIURL = function(url){
     hackaAPIURL = url;
-};
-
-var writeJSON = function(serialized, callback){
-    fs.writeFile(os.homedir() + "/" + HNSAVED_FILENAME, serialized, function(err) {
-        if (err){
-            console.log("ERROR: Could not save file.");
-            return;
-        }
-        if (callback != null){
-            callback(err);
-        }
-    });
-};
-
-var openSavedPostsJSON = function(){
-    var data = null;
-    try{
-        data = fs.readFileSync(os.homedir() + "/" + HNSAVED_FILENAME, {encoding: 'utf-8'});
-    }catch(e){
-        if (e.code == 'ENOENT'){
-            console.log("ERROR: HN favourites file could not open. Creating new file...");
-            writeJSON("{}", null);
-        }
-        return;
-    }
-    jsonObject = JSON.parse(data);
-    if (jsonObject.ids != null){
-        setSavedPostIDS(jsonObject.ids);
-    }
-};
-
-var getSavedPostID = function(index){
-    if (isNaN(index)){
-        throw -1;
-    }else if (index >= savedIDs.length){
-        throw -2;
-    }
-    return savedIDs[index];
-};
-
-var setSavedPostIDS = function(savedList){
-    for (var i = 0; i < savedList.length; i++){
-        savedIDs.push(savedList[i]);
-    }
-};
-
-var savePostID = function(postID){
-    openSavedPostsJSON();
-    savedIDs.push(postID);
-    jsonObject.ids = savedIDs;
-    var jsonSerialized = JSON.stringify(jsonObject);
-    writeJSON(jsonSerialized, function(err){
-        console.log("Successfully added post of ID " + postID + " to favourites.");
-    });
-};
-
-var unsavePostID = function(postID){
-    openSavedPostsJSON();
-    var index = savedIDs.indexOf(postID);
-    if (index <= -1){
-        console.log("Could not find a post of this ID saved in your favourites.");
-        return;
-    }
-    savedIDs.splice(index, 1);
-    jsonObject.ids = savedIDs;
-    var jsonSerialized = JSON.stringify(jsonObject);
-    writeJSON(jsonSerialized, function(err){
-        console.log("Successfully removed post of ID " + postID + " from favourites.");
-    });
 };
 
 var requestFeedStoryIDs = function(storyType, callback){
@@ -214,14 +137,8 @@ var fetchTopURL = function(index, callback) {
 
 module.exports = {
     getAmountOfFeedStories,
-    getSavedIDs,
     getURL,
     setAPIURL,
-    openSavedPostsJSON,
-    getSavedPostID,
-    setSavedPostIDS,
-    savePostID,
-    unsavePostID,
     requestFeedStoryIDs,
     requestStory,
     requestStoryParsed,

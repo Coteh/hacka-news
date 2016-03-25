@@ -4,7 +4,7 @@ exports.NOFAVS_MESSAGE = "No favourites.";
 
 exports.displayMessage = function(message){
     console.log(colors.yellow(message));
-}
+};
 
 exports.displayContent = function(hnNode, flags){
     if (hnNode == null || hnNode.type == null){
@@ -82,4 +82,4 @@ exports.displayContent = function(hnNode, flags){
             console.log(colors.yellow("Pollopt: " + hnNode.text));
         }
     }
-}
+};

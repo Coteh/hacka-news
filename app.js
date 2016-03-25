@@ -1,9 +1,10 @@
 var hackaNews = require('./src/hacka-news');
 var cliDisplay = require('./src/cli-display');
+var hackaFavs = require('./src/hacka-favs');
 var cliProcessor = require('commander');
 
 var printFavourites = function(flags){
-    var savedIDs = hackaNews.getSavedIDs();
+    var savedIDs = hackaFavs.getSavedIDs();
     if (savedIDs.length == 0){
         cliDisplay.displayMessage(cliDisplay.NOFAVS_MESSAGE);
         return;
@@ -57,7 +58,7 @@ cliProcessor
     .action(function(cmd, arguments, options){
         cmdGiven = cmd;
         if (cmd == "favs"){
-            hackaNews.openSavedPostsJSON();
+            hackaFavs.openSavedPostsJSON();
             printFavourites(options);
         }else if (cmd == "top"){
             printFeed("top", options);
@@ -78,10 +79,10 @@ cliProcessor
             if (arguments.length < 1){
                 console.log("expected: an index number of the favourite story to get the url of")
             } else {
-                hackaNews.openSavedPostsJSON();
+                hackaFavs.openSavedPostsJSON();
                 var indexOfStory = parseInt(arguments[0]);
                 try {
-                    var hackaURL = hackaNews.getURL(hackaNews.getSavedPostID(indexOfStory));
+                    var hackaURL = hackaNews.getURL(hackaFavs.getSavedPostID(indexOfStory));
                 }catch (e){
                     if (e == -1){
                         console.log("ERROR: Index entered is not a number.");
@@ -119,10 +120,10 @@ cliProcessor
             if (arguments.length < 1){
                 console.log("expected: an index number of the favourite story to get the id of")
             } else {
-                hackaNews.openSavedPostsJSON();
+                hackaFavs.openSavedPostsJSON();
                 var indexOfStory = parseInt(arguments[0]);
                 try {
-                    var hackaID = hackaNews.getSavedPostID(indexOfStory);
+                    var hackaID = hackaFavs.getSavedPostID(indexOfStory);
                 }catch (e){
                     if (e == -1){
                         console.log("ERROR: Index entered is not a number.");
@@ -137,9 +138,9 @@ cliProcessor
             }
             return;
         }else if (cmd == "save"){
-            hackaNews.savePostID(parseInt(arguments[0]));
+            hackaFavs.savePostID(parseInt(arguments[0]));
         }else if (cmd == "unsave"){
-            hackaNews.unsavePostID(parseInt(arguments[0]));
+            hackaFavs.unsavePostID(parseInt(arguments[0]));
         }else if (cmd == "topid"){
             var indexOfStory = 0;
             if (arguments.length >= 1){
