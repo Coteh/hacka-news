@@ -8,7 +8,11 @@ A node module that utilizes the [Hacker News](https://news.ycombinator.com/) [of
 - Return a story url for post of ID
 
 ## Installation
-Run *git clone hacka-news* to clone this repository, then run *npm install* to install all the dependencies.
+Clone the repository with:  
+`git clone https://github.com/Coteh/hacka-news`
+
+Then to install all the dependencies, run:  
+`npm install`
 
 ## Issues
 - Error comments are unorganized
