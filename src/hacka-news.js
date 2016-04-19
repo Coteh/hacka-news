@@ -1,4 +1,5 @@
 var request = require('request');
+var hackaTime = require('./hacka-time');
 
 var HACKA_URL = "https://news.ycombinator.com/";
 var MAX_LIST_STORIES = 500; //The official HN API only stores up to 500 top/new stories
@@ -146,3 +147,5 @@ module.exports = {
     fetchTopID,
     fetchTopURL
 };
+
+module.exports.time = hackaTime;
