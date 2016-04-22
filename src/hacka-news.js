@@ -2,15 +2,11 @@ var request = require('request');
 var hackaTime = require('./hacka-time');
 
 var HACKA_URL = "https://news.ycombinator.com/";
-var MAX_LIST_STORIES = 500; //The official HN API only stores up to 500 top/new stories
+const MAX_LIST_STORIES = 500; //The official HN API only provides 500 top/new stories
+const MAX_POSTINGS_STORIES = 200; //The official HN API only provides 200 ask/show/job stories
 
 var hackaAPIURL = "https://hacker-news.firebaseio.com/v0/";
-var amtOfFeedStories = 10;
 var jsonObject = null;
-
-var getAmountOfFeedStories = function(){
-    return amtOfFeedStories;
-};
 
 var getURL = function(id){
     return HACKA_URL + "item?id=" + id;
@@ -20,13 +16,22 @@ var setAPIURL = function(url){
     hackaAPIURL = url;
 };
 
-var requestFeedStoryIDs = function(storyType, callback){
+var pruneResults = function(ids, limit){
+    var prunedIDs = ids.slice(0, limit);
+    return prunedIDs;
+}
+
+var requestFeedStoryIDs = function(storyType, limit, callback){
     request(hackaAPIURL + storyType + "stories.json?print=pretty", function(error, response, body) {
         if (error){
             console.log("ERROR: Couldn't load " + storyType + " stories.");
             return;
         }
         ids = JSON.parse(body);
+        var maxLimit = (storyType == "top" || storyType == "new") ? MAX_LIST_STORIES : MAX_POSTINGS_STORIES;
+        if (limit < maxLimit) {
+            ids = pruneResults(ids, limit);
+        }
         callback(ids);
     });
 };
@@ -121,7 +126,7 @@ var fetchTopID = function(index, callback) {
     if (index < 0 || index >= MAX_LIST_STORIES){
         throw -1;
     }
-    requestFeedStoryIDs("top", function(ids){
+    requestFeedStoryIDs("top", 1, function(ids){
         if (ids == null){
             console.log("ERROR: Top stories did not load.");
             return;
@@ -137,7 +142,6 @@ var fetchTopURL = function(index, callback) {
 };
 
 module.exports = {
-    getAmountOfFeedStories,
     getURL,
     setAPIURL,
     requestFeedStoryIDs,
