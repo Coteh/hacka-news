@@ -38,7 +38,7 @@ var requestFeedStoryIDs = function(storyType, limit, callback){
 
 var requestStory = function(id, callback){
     request(hackaAPIURL + "item/" + id + ".json?print=pretty", function (error, response, body) {
-        if (error){
+        if (error || body === "null\n"){
             console.log("ERROR: Couldn't load story.");
             return;
         }
