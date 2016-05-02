@@ -30,6 +30,10 @@
   },
   "homepage": "https://github.com/Coteh/hacka-news#readme",
   "engines": {
-    "node" : ">=4.0.0"
+    "node": ">=4.0.0"
+  },
+  "devDependencies": {
+    "mocha": "^2.4.5",
+    "should": "^8.3.1"
   }
 }
