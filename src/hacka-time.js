@@ -5,8 +5,12 @@ const NUM_SECONDS_IN_WEEK = 604800;
 const NUM_SECONDS_IN_MONTH = 2592000; //average amount of days in month: 30
 const NUM_SECONDS_IN_YEAR = 31536000; //going by 365 days in a year
 
+exports.getNowTime = function(){
+    return Math.floor((new Date()).getTime() / 1000); //takes current time then converts from milliseconds to seconds
+}
+
 exports.getTimeStringFromEpoch = function(timeval) {
-    var now = Math.floor((new Date()).getTime() / 1000); //takes current time then converts from milliseconds to seconds
+    var now = this.getNowTime();
     var timeDelta = now - timeval;
     var timeDeltaAbs = Math.abs(timeDelta);
     var timeNum = 0;
