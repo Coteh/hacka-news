@@ -14,9 +14,18 @@ Clone the repository with:
 Then to install all the dependencies, run:  
 `npm install`
 
+## Testing
+Currently, the tests are set up using the [mocha](http://mochajs.org/) testing framework, and assertions done using [should](https://www.npmjs.com/package/should).
+
+To run the tests, make sure you have mocha installed globally using:  
+`npm install -g mocha`
+
+Then run the tests using:  
+`mocha`
+
 ## Issues
 - Error comments are unorganized
-- No unit/integration testing
+- No integration testing
 
 ## Future Additions
 - Filter feed results by story url or some other method of organization
