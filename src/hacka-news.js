@@ -152,6 +152,7 @@ module.exports = {
     requestStory,
     parseStory,
     requestStoryParsed,
+    requestRootParent,
     requestGroup,
     fetchTopID,
     fetchTopURL
