@@ -46,9 +46,13 @@ var requestStory = function(id, callback){
     });
 };
 
+var parseStory = function(jsonStr){
+    return JSON.parse(jsonStr);
+}
+
 var requestStoryParsed = function(id, callback){
     requestStory(id, function(hnJsonStr){
-        var parsedStory = JSON.parse(hnJsonStr);
+        var parsedStory = parseStory(hnJsonStr);
         injectStoryExtras(parsedStory, callback);
         // callback(parsedStory);
     });
@@ -146,6 +150,7 @@ module.exports = {
     setAPIURL,
     requestFeedStoryIDs,
     requestStory,
+    parseStory,
     requestStoryParsed,
     requestGroup,
     fetchTopID,
