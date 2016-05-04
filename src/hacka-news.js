@@ -153,6 +153,7 @@ module.exports = {
     parseStory,
     requestStoryParsed,
     requestRootParent,
+    requestPollOptions,
     requestGroup,
     fetchTopID,
     fetchTopURL
