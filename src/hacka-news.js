@@ -152,6 +152,7 @@ module.exports = {
     requestStory,
     parseStory,
     requestStoryParsed,
+    injectStoryExtras,
     requestRootParent,
     requestPollOptions,
     requestGroup,
