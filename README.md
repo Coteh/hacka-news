@@ -1,4 +1,4 @@
-# hacka-news
+# hacka-news [![Build Status](https://travis-ci.org/Coteh/hacka-news.svg?branch=master)](https://travis-ci.org/Coteh/hacka-news)
 -----------------
 A node module that utilizes the [Hacker News](https://news.ycombinator.com/) [official API](https://github.com/HackerNews/API) and powers [my command line app (of similar name)](https://github.com/Coteh/hacka-news-cli).
 
