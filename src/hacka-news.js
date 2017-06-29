@@ -24,7 +24,7 @@ var pruneResults = function(ids, limit){
 var requestFeedStoryIDs = function(storyType, limit, callback){
     request(hackaAPIURL + storyType + "stories.json?print=pretty", function(error, response, body) {
         if (error){
-            console.log("ERROR: Couldn't load " + storyType + " stories.");
+            callback({message: "ERROR: Couldn't load " + storyType + " stories."}, null);
             return;
         }
         ids = JSON.parse(body);
@@ -32,17 +32,17 @@ var requestFeedStoryIDs = function(storyType, limit, callback){
         if (limit < maxLimit) {
             ids = pruneResults(ids, limit);
         }
-        callback(ids);
+        callback(null, {ids: ids});
     });
 };
 
 var requestStory = function(id, callback){
     request(hackaAPIURL + "item/" + id + ".json?print=pretty", function (error, response, body) {
         if (error || body === "null\n"){
-            console.log("ERROR: Couldn't load story.");
+            callback({message: "ERROR: Couldn't retrieve JSON stringified story."}, null);
             return;
         }
-        callback(body);
+        callback(null, {bodyStr: body});
     });
 };
 
@@ -51,10 +51,13 @@ var parseStory = function(jsonStr){
 }
 
 var requestStoryParsed = function(id, callback){
-    requestStory(id, function(hnJsonStr){
-        var parsedStory = parseStory(hnJsonStr);
+    requestStory(id, function(err, result){
+        if (err) {
+            callback({message: "ERROR: Couldn't load story."}, null);
+            return;
+        }
+        var parsedStory = parseStory(result.bodyStr);
         injectStoryExtras(parsedStory, callback);
-        // callback(parsedStory);
     });
 };
 
@@ -63,46 +66,53 @@ var injectStoryExtras = function(parsedStory, callback) {
     if (parsedStory.type == "comment"){
         requestRootParent(parsedStory, function(rootParent){
             parsedStory.rootParent = rootParent;
-            callback(parsedStory);
+            callback(null, parsedStory);
         });
     }else if (parsedStory.type == "poll"){
         requestPollOptions(parsedStory, function(pollOptArr){
             parsedStory.partNodes = pollOptArr;
-            callback(parsedStory);
+            callback(null, parsedStory);
         });
     }else{
-        callback(parsedStory);
+        callback(null, parsedStory);
     }
 };
 
 var requestRootParent = function(childNode, callback){
     if (childNode == null){
-        console.log("ERROR: Child node is null.");
+        callback({message: "ERROR: Child node is null."}, null);
         return;
     }
     //Get root parent of post (which, for a comment, should be the article they commented on)
     var rootParent = childNode;
     while (rootParent.parent != null){
         rootParent = rootParent.parent;
-        // console.log(rootParent);
     }
-    requestStoryParsed(rootParent, function(parsed){
-        callback(parsed);
+    requestStoryParsed(rootParent, function(err, parsed){
+        if (err) {
+            callback({message: "ERROR: Could not load root parent post."}, null);
+            return;
+        }
+        callback(null, parsed);
     });
 };
 
 var requestPollOptions = function(pollNode, callback){
     if (pollNode == null){
-        console.log("ERROR: Poll node is null.");
+        callback({message: "ERROR: Poll node is null."}. null);
         return;
     }
     var pollOptNodes = new Array();
     for (var i = 0; i < pollNode.parts.length; i++){
         //Get each pollopt
-        requestStoryParsed(pollNode.parts[i], function(parsedPollOpt){
+        requestStoryParsed(pollNode.parts[i], function(err, parsedPollOpt){
+            if (err) {
+                callback({message: "ERROR: One of the poll options could not load."}, null);
+                return;
+            }
             pollOptNodes.push(parsedPollOpt);
             if (pollOptNodes.length >= pollNode.parts.length){
-                callback(pollOptNodes);
+                callback(null, {pollOpts: pollOptNodes});
             }
         });
     }
@@ -114,34 +124,49 @@ var requestGroup = function(idList, callback){
     var expectedCount = idList.length;
     for (var i = 0; i < idList.length; i++){
         loadedList.push(null);
+        var shouldTerminate = false;
         (function(index){
-            requestStoryParsed(idList[index], function(hnJson){
+            requestStoryParsed(idList[index], function(err, hnJson){
+                if (err) {
+                    callback({message: "ERROR: One of the messages in this group could not load."}, null);
+                    shouldTerminate = true;
+                    return;
+                }
                 loadedList[index] = hnJson;
                 loadedCount++;
                 if (loadedCount >= expectedCount){
-                    callback(loadedList);
+                    callback(null, {storyList: loadedList});
+                    shouldTerminate = true;
+                    return;
                 }
             });
         })(i);
+        if (shouldTerminate) {
+            return;
+        }
     }
 };
 
 var fetchTopID = function(index, callback) {
     if (index < 0 || index >= MAX_LIST_STORIES){
-        throw -1;
+        callback({message: "ERROR: Index provided is not within proper range."}, null);
+        return;
     }
-    requestFeedStoryIDs("top", 1, function(ids){
-        if (ids == null){
-            console.log("ERROR: Top stories did not load.");
+    requestFeedStoryIDs("top", 1, function(err, result){
+        if (err){
+            callback({message: "ERROR: Top story did not load."}, null);
             return;
         }
-        callback(ids[index]);
+        callback(null, {id: ids[index]});
     });
 };
 
 var fetchTopURL = function(index, callback) {
-    fetchTopID(index, function(id){
-        callback(getURL(id));
+    fetchTopID(index, function(err, result){
+        if (err) {
+            callback({message: "ERROR: Could not load top story URL."}, null);
+        }
+        callback(null, {url: getURL(id)});
     });
 };
 
