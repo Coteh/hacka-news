@@ -4,16 +4,34 @@ var path = require('path');
 var url = require('url');
 var port = 9001;
 
+var deniedList = [
+    "/toppstories.json"
+];
+
+var hasPermission = function(pathName) {
+    for (var i = 0; i < deniedList.length; i++) {
+        if (pathName.indexOf(deniedList[i]) >= 0) {
+            return false;
+        }
+    }
+    return true;
+};
+
 http.createServer(function(request, response){
 
   var uri = url.parse(request.url, true);
   var pathName = uri.pathname;
   var filePath = path.join(__dirname, pathName);
   var printMode = uri.query.print;
-
   var jsonContents = null;
+  var contentType = 'application/json';
 
-  contentType = 'application/json';
+  if (!hasPermission(pathName)) {
+      response.writeHead(401, {"Content-Type" : "application/json"});
+      response.write(JSON.stringify({error: "Permission denied"}));
+      response.end();
+      return;
+  }
 
   fs.exists(filePath, function(exists) {
     if (!exists){

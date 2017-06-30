@@ -7,8 +7,19 @@ hackaNews.setAPIURL("http://localhost:9001/");
 describe("hacka-news", function(){
     describe("story feeds", function(){
         it("should retrieve an array of top story ids from the server.", function(done){
-            hackaNews.requestFeedStoryIDs("top", 10, function(ids){
-                should(ids).containDeepOrdered([11234589, 11235893, 11234008, 11235537, 11234739, 11235190, 11234229, 11223665, 11234840, 11234807]);
+            hackaNews.requestFeedStoryIDs("top", 10, function(err, result){
+                should(err).be.eql(null);
+                should(result).have.property("ids");
+                should(result.ids).containDeepOrdered([11234589, 11235893, 11234008, 11235537, 11234739, 11235190, 11234229, 11223665, 11234840, 11234807]);
+                done();
+            });
+        });
+        it("should fail to retrieve an array of story ids if attempting to connect to incorrect feed type", function(done) {
+            hackaNews.requestFeedStoryIDs("topp", 10, function(err, result){
+                should(err).not.be.eql(null);
+                should(result).be.eql(null);
+                should(err).have.property("message");
+                should(err.message).be.eql("ERROR: Permission denied");
                 done();
             });
         });

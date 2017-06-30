@@ -28,6 +28,14 @@ var requestFeedStoryIDs = function(storyType, limit, callback){
             return;
         }
         ids = JSON.parse(body);
+        if (ids == null) {
+            callback({message: "ERROR: Malformed ID array."}, null);
+            return;
+        }
+        if (ids.error !== undefined) {
+            callback({message: "ERROR: " + ids.error}, null);
+            return;
+        }
         var maxLimit = (storyType == "top" || storyType == "new") ? MAX_LIST_STORIES : MAX_POSTINGS_STORIES;
         if (limit < maxLimit) {
             ids = pruneResults(ids, limit);
