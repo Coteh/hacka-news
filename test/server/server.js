@@ -19,47 +19,49 @@ var hasPermission = function(pathName) {
 
 http.createServer(function(request, response){
 
-  var uri = url.parse(request.url, true);
-  var pathName = uri.pathname;
-  var filePath = path.join(__dirname, pathName);
-  var printMode = uri.query.print;
-  var jsonContents = null;
-  var contentType = 'application/json';
+    var uri = url.parse(request.url, true);
+    var pathName = uri.pathname;
+    var filePath = path.join(__dirname, pathName);
+    var printMode = uri.query.print;
+    var jsonContents = null;
+    var contentType = 'application/json';
 
-  if (!hasPermission(pathName)) {
-      response.writeHead(401, {"Content-Type" : "application/json"});
-      response.write(JSON.stringify({error: "Permission denied"}));
-      response.end();
-      return;
-  }
+    if (!hasPermission(pathName)) {
+        response.writeHead(401, {"Content-Type" : "application/json"});
+        response.write(JSON.stringify({error: "Permission denied"}));
+        response.end();
+        return;
+    }
 
   fs.exists(filePath, function(exists) {
     if (!exists){
-      response.writeHead(404, {"Content-Type" : "text/plain"});
-      response.write("null\n");
-      response.end();
-      return;
+        if (pathName.indexOf("/item/") < 0) {
+            response.writeHead(404, {"Content-Type" : "text/plain"});
+        }
+        response.write("null\n");
+        response.end();
+        return;
     }
 
     if (fs.statSync(filePath).isDirectory()){
-      filePath += "/index.html";
+        filePath += "/index.html";
     }
 
     fs.readFile(filePath, function(error, content) {
-      if (error){
-        if (error.code == 'ENOENT'){
-          response.writeHead(404, {"Content-Type" : "text/plain"});
-          response.write(error + "\n");
-          response.end();
+        if (error){
+            if (error.code == 'ENOENT'){
+                response.writeHead(404, {"Content-Type" : "text/plain"});
+                response.write(error + "\n");
+                response.end();
+            }else{
+                response.writeHead(500, {"Content-Type" : "text/plain"});
+                response.write(error + "\n");
+                response.end();
+            }
         }else{
-          response.writeHead(500, {"Content-Type" : "text/plain"});
-          response.write(error + "\n");
-          response.end();
+            response.writeHead(200, {"Content-Type" : contentType});
+            response.end(content, 'utf-8');
         }
-      }else{
-        response.writeHead(200, {"Content-Type" : contentType});
-        response.end(content, 'utf-8');
-      }
     });
 
     //Load the json from file

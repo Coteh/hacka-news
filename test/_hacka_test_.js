@@ -31,9 +31,17 @@ describe("hacka-news", function(){
         it("should be able to return a JSON string of an individual story.", function(done){
             hackaNews.requestStory(11234589, function(err, result){
                 should(err).be.eql(null);
-                should(result).not.be.eql(null);
                 should(result).have.property("bodyStr");
-                should(result.bodyStr.split('\r').join('')).be.exactly("{\n  \"by\" : \"mroling\",\n  \"descendants\" : 335,\n  \"id\" : 11234589,\n  \"kids\" : [ 11237821, 11234917, 11234688, 11235131, 11234892, 11234635, 11234860, 11237199, 11234725, 11235242, 11234865, 11235053, 11235258, 11234664, 11235433, 11235639, 11235009, 11234854, 11234748, 11234845, 11235769, 11237634, 11235851, 11235122, 11238677, 11235720, 11236034, 11235578, 11238890, 11235229, 11235200, 11237186, 11236421, 11236487, 11236245, 11235926, 11236041, 11235333, 11234644, 11235137, 11235877, 11237701, 11238417, 11235312, 11237012, 11237724, 11234651, 11236082 ],\n  \"score\" : 895,\n  \"time\" : 1457285648,\n  \"title\" : \"Transmission BitTorrent app contained malware\",\n  \"type\" : \"story\",\n  \"url\" : \"https://forum.transmissionbt.com/viewtopic.php?f=4&t=17834\"\n}\n");
+                should(result.bodyStr).be.exactly("{\n  \"by\" : \"mroling\",\n  \"descendants\" : 335,\n  \"id\" : 11234589,\n  \"kids\" : [ 11237821, 11234917, 11234688, 11235131, 11234892, 11234635, 11234860, 11237199, 11234725, 11235242, 11234865, 11235053, 11235258, 11234664, 11235433, 11235639, 11235009, 11234854, 11234748, 11234845, 11235769, 11237634, 11235851, 11235122, 11238677, 11235720, 11236034, 11235578, 11238890, 11235229, 11235200, 11237186, 11236421, 11236487, 11236245, 11235926, 11236041, 11235333, 11234644, 11235137, 11235877, 11237701, 11238417, 11235312, 11237012, 11237724, 11234651, 11236082 ],\n  \"score\" : 895,\n  \"time\" : 1457285648,\n  \"title\" : \"Transmission BitTorrent app contained malware\",\n  \"type\" : \"story\",\n  \"url\" : \"https://forum.transmissionbt.com/viewtopic.php?f=4&t=17834\"\n}\n");
+                done();
+            });
+        });
+        it("should be able to handle an invalid story id", function(done) {
+            hackaNews.requestStory(0, function(err, result){
+                should(err).not.be.eql(null);
+                should(result).be.eql(null);
+                should(err).have.property("message");
+                should(err.message).be.exactly("ERROR: Couldn't retrieve JSON stringified story.");
                 done();
             });
         });
