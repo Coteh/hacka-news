@@ -78,6 +78,10 @@ var requestStoryParsed = function(id, callback){
 };
 
 var injectStoryExtras = function(parsedStory, callback) {
+    if (parsedStory == null){
+        callback({message: "ERROR: Parsed story is null."}, parsedStory);
+        return;
+    }
     parsedStory.commentsUrl = getURL(parsedStory.id); //injecting comments url address into the node
     if (parsedStory.type == "comment"){
         requestRootParent(parsedStory, function(rootParent){
