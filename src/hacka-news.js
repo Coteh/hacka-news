@@ -126,7 +126,7 @@ var requestPollOptions = function(pollNode, callback){
                 callback({message: "ERROR: One of the poll options could not load."}, null);
                 return;
             }
-            pollOptNodes.push(parsedPollOpt);
+            pollOptNodes.splice(i, 0, parsedPollOpt);
             if (pollOptNodes.length >= pollNode.parts.length){
                 callback(null, {pollOpts: pollOptNodes});
             }
