@@ -24,7 +24,15 @@ describe("hacka-news", function(){
             });
         });
         it("should fail to retrieve an array of story ids if host server could not be reached", function(done) {
-            should.fail();
+            hackaNews.setAPIURL("http://localhost:9000/");
+            hackaNews.requestFeedStoryIDs("top", 10, function(err, result){
+                should(err).not.be.eql(null);
+                should(result).be.eql(null);
+                should(err).have.property("message");
+                should(err.message).be.eql("ERROR: Connection to server refused.");
+                done();
+            });
+            hackaNews.setAPIURL("http://localhost:9001/");
         });
     });
     describe("requesting individual stories", function(){
@@ -44,6 +52,17 @@ describe("hacka-news", function(){
                 should(err.message).be.exactly("ERROR: Couldn't retrieve JSON stringified story.");
                 done();
             });
+        });
+        it("should fail to retrieve a story if host server could not be reached", function(done) {
+            hackaNews.setAPIURL("http://localhost:9000/");
+            hackaNews.requestStory(11234589, function(err, result){
+                should(err).not.be.eql(null);
+                should(result).be.eql(null);
+                should(err).have.property("message");
+                should(err.message).be.exactly("ERROR: Connection to server refused.");
+                done();
+            });
+            hackaNews.setAPIURL("http://localhost:9001/");
         });
     });
     describe("HN comment requests", function(){

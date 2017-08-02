@@ -24,7 +24,11 @@ var pruneResults = function(ids, limit){
 var requestFeedStoryIDs = function(storyType, limit, callback){
     request(hackaAPIURL + storyType + "stories.json?print=pretty", function(error, response, body) {
         if (error){
-            callback({message: "ERROR: Couldn't load " + storyType + " stories."}, null);
+            if (error.code == "ECONNREFUSED") {
+                callback({message: "ERROR: Connection to server refused."}, null);
+            } else {
+                callback({message: "ERROR: Couldn't load " + storyType + " stories."}, null);
+            }
             return;
         }
         ids = JSON.parse(body);
@@ -47,7 +51,11 @@ var requestFeedStoryIDs = function(storyType, limit, callback){
 var requestStory = function(id, callback){
     request(hackaAPIURL + "item/" + id + ".json?print=pretty", function (error, response, body) {
         if (error || body === "null\n"){
-            callback({message: "ERROR: Couldn't retrieve JSON stringified story."}, null);
+            if (error && error.code == "ECONNREFUSED") {
+                callback({message: "ERROR: Connection to server refused."}, null);
+            } else {
+                callback({message: "ERROR: Couldn't retrieve JSON stringified story."}, null);
+            }
             return;
         }
         callback(null, {bodyStr: body});
