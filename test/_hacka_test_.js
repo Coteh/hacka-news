@@ -97,7 +97,6 @@ describe("hacka-news", function(){
                 should(err).be.eql(null);
                 hackaNews.requestPollOptions(result, function(err, result){
                     should(err).be.eql(null);
-                    console.log(result);
                     should(result.pollOpts[0].id).equal(126810);
                     should(result.pollOpts[1].id).equal(126811);
                     should(result.pollOpts[2].id).equal(126812);
@@ -139,8 +138,9 @@ describe("hacka-news", function(){
             });
         });
         it("should be able to inject the root parent into a comment post", function(done){
-            hackaNews.requestStory(2921983, function(commentPostStr){
-                var parsedStory = hackaNews.parseStory(commentPostStr);
+            hackaNews.requestStory(2921983, function(err, result){
+                should(err).be.eql(null);
+                var parsedStory = hackaNews.parseStory(result.bodyStr);
                 hackaNews.injectStoryExtras(parsedStory, function(err){
                     should(err).be.eql(null);
                     should.exist(parsedStory.rootParent);
@@ -149,9 +149,13 @@ describe("hacka-news", function(){
                 });
             });
         });
+        it("should return an error if attempting to inject an invalid root parent into a comment post", function(done) {
+            should.fail();
+        });
         it("should be able to inject poll options into a poll post", function(done){
-            hackaNews.requestStory(126809, function(pollPostStr){
-                var parsedStory = hackaNews.parseStory(pollPostStr);
+            hackaNews.requestStory(126809, function(err, result){
+                should(err).be.eql(null);
+                var parsedStory = hackaNews.parseStory(result.bodyStr);
                 hackaNews.injectStoryExtras(parsedStory, function(err){
                     should(err).be.eql(null);
                     should.exist(parsedStory.partNodes);
@@ -161,6 +165,9 @@ describe("hacka-news", function(){
                     done();
                 })
             });
+        });
+        it("should return an error if attempting to inject invalid poll options into a poll post", function(done) {
+            should.fail();
         });
     });
 });
