@@ -84,13 +84,21 @@ var injectStoryExtras = function(parsedStory, callback) {
     }
     parsedStory.commentsUrl = getURL(parsedStory.id); //injecting comments url address into the node
     if (parsedStory.type == "comment"){
-        requestRootParent(parsedStory, function(rootParent){
-            parsedStory.rootParent = rootParent;
+        requestRootParent(parsedStory, function(err, result){
+            if (err) {
+                callback({message: "ERROR: Could not inject root parent into comment."});
+                return;
+            }
+            parsedStory.rootParent = result;
             callback(null, parsedStory);
         });
     }else if (parsedStory.type == "poll"){
-        requestPollOptions(parsedStory, function(pollOptArr){
-            parsedStory.partNodes = pollOptArr;
+        requestPollOptions(parsedStory, function(err, result){
+            if (err) {
+                callback({message: "ERROR: Could not inject poll options into story."});
+                return;
+            }
+            parsedStory.partNodes = result.pollOpts;
             callback(null, parsedStory);
         });
     }else{
