@@ -182,6 +182,9 @@ describe("hacka-news", function(){
         });
         it("should fail if connection timed out", function(done) {
             should.fail();
-        })
+        });
+        it("should fail if a story in the group is invalid", function(done) {
+            should.fail();
+        });
     });
 });
