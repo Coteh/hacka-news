@@ -133,16 +133,18 @@ var requestPollOptions = function(pollNode, callback){
     var pollOptNodes = new Array();
     for (var i = 0; i < pollNode.parts.length; i++){
         //Get each pollopt
-        requestStoryParsed(pollNode.parts[i], function(err, parsedPollOpt){
-            if (err) {
-                callback({message: "ERROR: One of the poll options could not load."}, null);
-                return;
-            }
-            pollOptNodes.splice(i, 0, parsedPollOpt);
-            if (pollOptNodes.length >= pollNode.parts.length){
-                callback(null, {pollOpts: pollOptNodes});
-            }
-        });
+        (function(index) {
+            requestStoryParsed(pollNode.parts[i], function(err, parsedPollOpt){
+                if (err) {
+                    callback({message: "ERROR: One of the poll options could not load."}, null);
+                    return;
+                }
+                pollOptNodes.splice(index, 0, parsedPollOpt);
+                if (pollOptNodes.length >= pollNode.parts.length){
+                    callback(null, {pollOpts: pollOptNodes});
+                }
+            });
+        })(i);
     }
 };
 
