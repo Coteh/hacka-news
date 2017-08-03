@@ -58,7 +58,7 @@ var requestStory = function(id, callback){
             }
             return;
         }
-        callback(null, {bodyStr: body});
+        callback(null, {storyStr: body});
     });
 };
 
@@ -72,7 +72,7 @@ var requestStoryParsed = function(id, callback){
             callback({message: "ERROR: Couldn't load story."}, null);
             return;
         }
-        var parsedStory = parseStory(result.bodyStr);
+        var parsedStory = parseStory(result.storyStr);
         injectStoryExtras(parsedStory, callback);
     });
 };

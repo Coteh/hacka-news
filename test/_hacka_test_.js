@@ -39,8 +39,8 @@ describe("hacka-news", function(){
         it("should be able to return a JSON string of an individual story", function(done){
             hackaNews.requestStory(11234589, function(err, result){
                 should(err).be.eql(null);
-                should(result).have.property("bodyStr");
-                should(result.bodyStr).be.exactly("{\n  \"by\" : \"mroling\",\n  \"descendants\" : 335,\n  \"id\" : 11234589,\n  \"kids\" : [ 11237821, 11234917, 11234688, 11235131, 11234892, 11234635, 11234860, 11237199, 11234725, 11235242, 11234865, 11235053, 11235258, 11234664, 11235433, 11235639, 11235009, 11234854, 11234748, 11234845, 11235769, 11237634, 11235851, 11235122, 11238677, 11235720, 11236034, 11235578, 11238890, 11235229, 11235200, 11237186, 11236421, 11236487, 11236245, 11235926, 11236041, 11235333, 11234644, 11235137, 11235877, 11237701, 11238417, 11235312, 11237012, 11237724, 11234651, 11236082 ],\n  \"score\" : 895,\n  \"time\" : 1457285648,\n  \"title\" : \"Transmission BitTorrent app contained malware\",\n  \"type\" : \"story\",\n  \"url\" : \"https://forum.transmissionbt.com/viewtopic.php?f=4&t=17834\"\n}\n");
+                should(result).have.property("storyStr");
+                should(result.storyStr).be.exactly("{\n  \"by\" : \"mroling\",\n  \"descendants\" : 335,\n  \"id\" : 11234589,\n  \"kids\" : [ 11237821, 11234917, 11234688, 11235131, 11234892, 11234635, 11234860, 11237199, 11234725, 11235242, 11234865, 11235053, 11235258, 11234664, 11235433, 11235639, 11235009, 11234854, 11234748, 11234845, 11235769, 11237634, 11235851, 11235122, 11238677, 11235720, 11236034, 11235578, 11238890, 11235229, 11235200, 11237186, 11236421, 11236487, 11236245, 11235926, 11236041, 11235333, 11234644, 11235137, 11235877, 11237701, 11238417, 11235312, 11237012, 11237724, 11234651, 11236082 ],\n  \"score\" : 895,\n  \"time\" : 1457285648,\n  \"title\" : \"Transmission BitTorrent app contained malware\",\n  \"type\" : \"story\",\n  \"url\" : \"https://forum.transmissionbt.com/viewtopic.php?f=4&t=17834\"\n}\n");
                 done();
             });
         });
@@ -69,8 +69,8 @@ describe("hacka-news", function(){
         it("should be able to request for root parent of a comment", function(done){
             hackaNews.requestStory(2921983, function(err, result){
                 should(err).be.eql(null);
-                should(result).have.property("bodyStr");
-                var parsed = hackaNews.parseStory(result.bodyStr);
+                should(result).have.property("storyStr");
+                var parsed = hackaNews.parseStory(result.storyStr);
                 hackaNews.requestRootParent(parsed, function(err, result){
                     should(err).be.eql(null);
                     should(result).containDeep({
@@ -140,7 +140,7 @@ describe("hacka-news", function(){
         it("should be able to inject the root parent into a comment post", function(done){
             hackaNews.requestStory(2921983, function(err, result){
                 should(err).be.eql(null);
-                var parsedStory = hackaNews.parseStory(result.bodyStr);
+                var parsedStory = hackaNews.parseStory(result.storyStr);
                 hackaNews.injectStoryExtras(parsedStory, function(err){
                     should(err).be.eql(null);
                     should.exist(parsedStory.rootParent);
@@ -155,7 +155,7 @@ describe("hacka-news", function(){
         it("should be able to inject poll options into a poll post", function(done){
             hackaNews.requestStory(126809, function(err, result){
                 should(err).be.eql(null);
-                var parsedStory = hackaNews.parseStory(result.bodyStr);
+                var parsedStory = hackaNews.parseStory(result.storyStr);
                 hackaNews.injectStoryExtras(parsedStory, function(err){
                     should(err).be.eql(null);
                     should.exist(parsedStory.partNodes);
