@@ -170,4 +170,18 @@ describe("hacka-news", function(){
             should.fail();
         });
     });
+    describe("story groups", function() {
+        it("should be able to take in an array of story IDs and return the appropriate parsed stories", function(done) {
+            should.fail();
+        });
+        it("should fail if an empty array is passed in", function(done) {
+            should.fail();
+        });
+        it("should fail if null is passed as the ID array", function(done) {
+            should.fail();
+        });
+        it("should fail if connection timed out", function(done) {
+            should.fail();
+        })
+    });
 });
