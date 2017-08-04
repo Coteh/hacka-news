@@ -156,19 +156,28 @@ var requestGroup = function(idList, callback){
     }
     var loadedList = [];
     var loadedCount = 0;
+    var shouldTerminate = false;
     for (var i = 0; i < idList.length; i++){
+        if (shouldTerminate) {
+            return;
+        }
         loadedList.push(null);
         (function(index){
             requestStoryParsed(idList[index], function(err, hnJson){
                 if (err) {
-                    callback({message: "ERROR: One of the messages in this group could not load."}, null);
+                    if (!shouldTerminate) {
+                        callback({message: "ERROR: One of the messages in this group could not load."}, null);
+                    }
+                    shouldTerminate = true;
                     return;
                 }
-                loadedList[index] = hnJson;
-                loadedCount++;
-                if (loadedCount >= expectedCount){
-                    callback(null, {storyList: loadedList});
-                    return;
+                if (!shouldTerminate) {
+                    loadedList[index] = hnJson;
+                    loadedCount++;
+                    if (loadedCount >= expectedCount){
+                        callback(null, {storyList: loadedList});
+                        return;
+                    }
                 }
             });
         })(i);
