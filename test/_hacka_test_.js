@@ -172,19 +172,47 @@ describe("hacka-news", function(){
     });
     describe("story groups", function() {
         it("should be able to take in an array of story IDs and return the appropriate parsed stories", function(done) {
-            should.fail();
+            hackaNews.requestGroup([2921506, 11234589, 14923362], function(err, result) {
+                should(err).be.eql(null);
+                should(result.storyList).not.be.eql(null);
+                should(result.storyList.length).be.eql(3);
+                should(result.storyList[0].id).be.eql(2921506);
+                should(result.storyList[1].id).be.eql(11234589);
+                should(result.storyList[2].id).be.eql(14923362);
+                done();
+            });
         });
         it("should fail if an empty array is passed in", function(done) {
-            should.fail();
+            hackaNews.requestGroup([], function(err, result) {
+                should(err).not.be.eql(null);
+                should(err).have.property("message");
+                should(err.message).be.exactly("ERROR: No stories to be requested.");
+                done();
+            });
         });
         it("should fail if null is passed as the ID array", function(done) {
-            should.fail();
+            hackaNews.requestGroup(null, function(err, result) {
+                should(err).not.be.eql(null);
+                should(err).have.property("message");
+                should(err.message).be.exactly("ERROR: No stories to be requested.");
+                done();
+            });
         });
         it("should fail if connection timed out", function(done) {
-            should.fail();
+            hackaNews.setAPIURL("http://localhost:9000/");
+            hackaNews.requestGroup([2921506, 11234589, 14923362], function(err, result) {
+                should(err).not.be.eql(null);
+                should(err).have.property("message");
+                should(err.message).be.exactly("ERROR: Connection to server refused.");
+                done();
+            });
+            hackaNews.setAPIURL("http://localhost:9001/");
         });
         it("should fail if a story in the group is invalid", function(done) {
-            should.fail();
+            hackaNews.requestGroup([-1, -2, 11234589, 14923362], function(err, result) {
+                should(err).not.be.eql(null);
+                done();
+            });
         });
     });
 });
