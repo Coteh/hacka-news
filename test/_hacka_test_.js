@@ -203,7 +203,7 @@ describe("hacka-news", function(){
             hackaNews.requestGroup([2921506, 11234589, 14923362], function(err, result) {
                 should(err).not.be.eql(null);
                 should(err).have.property("message");
-                should(err.message).be.exactly("ERROR: Connection to server refused.");
+                should(err.message).be.exactly("ERROR: One of the messages in this group could not load.");
                 done();
             });
             hackaNews.setAPIURL("http://localhost:9001/");
