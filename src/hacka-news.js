@@ -149,31 +149,29 @@ var requestPollOptions = function(pollNode, callback){
 };
 
 var requestGroup = function(idList, callback){
+    var expectedCount = (idList != null) ? idList.length : 0;
+    if (expectedCount == 0) {
+        callback({message: "ERROR: No stories to be requested."}, null);
+        return;
+    }
     var loadedList = [];
     var loadedCount = 0;
-    var expectedCount = idList.length;
     for (var i = 0; i < idList.length; i++){
         loadedList.push(null);
-        var shouldTerminate = false;
         (function(index){
             requestStoryParsed(idList[index], function(err, hnJson){
                 if (err) {
                     callback({message: "ERROR: One of the messages in this group could not load."}, null);
-                    shouldTerminate = true;
                     return;
                 }
                 loadedList[index] = hnJson;
                 loadedCount++;
                 if (loadedCount >= expectedCount){
                     callback(null, {storyList: loadedList});
-                    shouldTerminate = true;
                     return;
                 }
             });
         })(i);
-        if (shouldTerminate) {
-            return;
-        }
     }
 };
 
