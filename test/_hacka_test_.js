@@ -150,7 +150,18 @@ describe("hacka-news", function(){
             });
         });
         it("should return an error if attempting to inject an invalid root parent into a comment post", function(done) {
-            should.fail();
+            //We have comment with item ID 16751452 but not its root parent,
+            //so root parent should return with an error
+            hackaNews.requestStory(16751452, function(err, result) {
+                should(err).be.eql(null);
+                var parsedStory = hackaNews.parseStory(result.storyStr);
+                hackaNews.injectStoryExtras(parsedStory, function(err, result) {
+                    should(err).not.be.eql(null);
+                    should(result).be.eql(undefined);
+                    should(err.message).be.eql("ERROR: Could not inject root parent into comment.");
+                    done();
+                });
+            });
         });
         it("should be able to inject poll options into a poll post", function(done){
             hackaNews.requestStory(126809, function(err, result){
@@ -167,7 +178,18 @@ describe("hacka-news", function(){
             });
         });
         it("should return an error if attempting to inject invalid poll options into a poll post", function(done) {
-            should.fail();
+            //We have poll of item ID 2595605 but only one of its options,
+            //we should get an error back
+            hackaNews.requestStory(2595605, function (err, result) {
+                should(err).be.eql(null);
+                var parsedStory = hackaNews.parseStory(result.storyStr);
+                hackaNews.injectStoryExtras(parsedStory, function (err, result) {
+                    should(err).not.be.eql(null);
+                    should(result).be.eql(undefined);
+                    should(err.message).be.eql("ERROR: Could not inject poll options into story.");
+                    done();
+                });
+            });
         });
     });
     describe("story groups", function() {
