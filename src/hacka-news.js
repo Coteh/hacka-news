@@ -83,7 +83,7 @@ var injectStoryExtras = function(parsedStory, callback) {
         return;
     }
     parsedStory.commentsUrl = getURL(parsedStory.id); //injecting comments url address into the node
-    if (parsedStory.type == "comment"){
+    if (parsedStory.type == "comment") {
         requestRootParent(parsedStory, function(err, result){
             if (err) {
                 callback({message: "ERROR: Could not inject root parent into comment."});
@@ -92,7 +92,7 @@ var injectStoryExtras = function(parsedStory, callback) {
             parsedStory.rootParent = result;
             callback(null, parsedStory);
         });
-    }else if (parsedStory.type == "poll"){
+    } else if (parsedStory.type == "poll") {
         requestPollOptions(parsedStory, function(err, result){
             if (err) {
                 callback({message: "ERROR: Could not inject poll options into story."});
@@ -101,7 +101,7 @@ var injectStoryExtras = function(parsedStory, callback) {
             parsedStory.partNodes = result.pollOpts;
             callback(null, parsedStory);
         });
-    }else{
+    } else {
         callback(null, parsedStory);
     }
 };
@@ -130,7 +130,8 @@ var requestPollOptions = function(pollNode, callback){
         callback({message: "ERROR: Poll node is null."}. null);
         return;
     }
-    var pollOptNodes = new Array();
+    var pollOptNodes = new Array(pollNode.parts.length);
+    var collectedCount = 0;
     for (var i = 0; i < pollNode.parts.length; i++){
         //Get each pollopt
         (function(index) {
@@ -139,8 +140,9 @@ var requestPollOptions = function(pollNode, callback){
                     callback({message: "ERROR: One of the poll options could not load."}, null);
                     return;
                 }
-                pollOptNodes.splice(index, 0, parsedPollOpt);
-                if (pollOptNodes.length >= pollNode.parts.length){
+                pollOptNodes[index] = parsedPollOpt;
+                collectedCount++;
+                if (collectedCount >= pollNode.parts.length){
                     callback(null, {pollOpts: pollOptNodes});
                 }
             });
