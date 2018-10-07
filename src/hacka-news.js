@@ -204,8 +204,9 @@ var fetchTopURL = function(index, callback) {
     fetchTopID(index, function(err, result){
         if (err) {
             callback({message: "ERROR: Could not load top story URL."}, null);
+            return;
         }
-        callback(null, {url: getURL(id)});
+        callback(null, {url: getURL(result.id)});
     });
 };
 

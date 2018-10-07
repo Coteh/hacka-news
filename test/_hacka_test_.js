@@ -237,4 +237,49 @@ describe("hacka-news", function(){
             });
         });
     });
+    describe("fetch top story ID", function() {
+        it("should fetch the ID of the top story in top stories", function(done) {
+            // hackaNews.fetchTopID(0, function(err, result) {
+                // should(err).not.be.eql(null);
+                // should(result).have.property("id");
+                // should(result.id).be.exactly(11234589);
+                should.fail(null, null, "Test not implemented.");
+            // });
+        });
+        it("should fail with an error if there are no stories in the feed", function(done) {
+            should.fail(null, null, "Test not implemented.");
+        });
+        it("should provide an error gracefully if the API server is offline", function(done) {
+            should.fail(null, null, "Test not implemented.");
+        });
+        it("should fail with an error if undefined is passed as the index", function(done) {
+            // hackaNews.fetchTopID(undefined, function (err, result) {
+                should.fail(null, null, "Test not implemented.");
+            // });
+        });
+        it("should fail with an error if null is passed as the index", function(done) {
+            should.fail(null, null, "Test not implemented.");
+        });
+    });
+    describe("fetch top story URL", function () {
+        it("should fetch the URL of the top story in top stories", function(done) {
+            // hackaNews.fetchTopURL(0, function (err, result) {
+                should.fail(null, null, "Test not implemented.");
+            // });
+        });
+        it("should fail with an error if there are no stories in the feed", function (done) {
+            should.fail(null, null, "Test not implemented.");
+        });
+        it("should provide an error gracefully if the API server is offline", function (done) {
+            should.fail(null, null, "Test not implemented.");
+        });
+        it("should fail with an error if undefined is passed as the index", function (done) {
+            // hackaNews.fetchTopURL(undefined, function (err, result) {
+            should.fail(null, null, "Test not implemented.");
+            // });
+        });
+        it("should fail with an error if null is passed as the index", function (done) {
+            should.fail(null, null, "Test not implemented.");
+        });
+    });
 });
